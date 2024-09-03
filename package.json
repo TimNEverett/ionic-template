@@ -1,8 +1,8 @@
 {
   "name": "ionic-template",
-  "private": true,
   "version": "0.0.1",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "ionic serve",
     "build": "tsc && vite build",
@@ -61,5 +61,5 @@
     "typescript": "^5.1.6",
     "vite": "~5.2.0"
   },
-  "description": "Template Ionic Project with "
+  "description": "A template for ionic react apps, using supabase, xstate, shadcn."
 }
