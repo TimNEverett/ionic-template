@@ -3,12 +3,11 @@ import { authLogic } from "../auth/logic";
 import {
   AuthenticatedEvent,
   CloseGroupMenuEvent,
+  ConfirmingAuthEvent,
   GoToChatTabEvent,
   GoToCreateMessageGroupEvent,
-  GoToForgotPasswordPageEvent,
   GoToOtherTabEvent,
   GoToSignInPageEvent,
-  GoToSignUpPageEvent,
   OpenGroupMenuEvent,
   OpenSelectGroupEvent,
   SetRouterEvent,
@@ -30,8 +29,7 @@ export const appLogic = setup({
       | AuthenticatedEvent
       | UnauthenticatedEvent
       | GoToSignInPageEvent
-      | GoToSignUpPageEvent
-      | GoToForgotPasswordPageEvent
+      | ConfirmingAuthEvent
       | GoToChatTabEvent
       | GoToOtherTabEvent
       | OpenGroupMenuEvent
@@ -82,29 +80,16 @@ export const appLogic = setup({
         go_to_sign_in_page: {
           target: ".SIGN_IN",
         },
-        go_to_sign_up_page: {
-          target: ".SIGN_UP",
+        confirming_auth: {
+          target: ".CONFIRMING_AUTH",
         },
-        go_to_forgot_password_page: {
-          target: ".FORGOT_PASSWORD",
+        authenticated: {
+          target: "#APP.AUTHENTICATED",
         },
       },
       states: {
-        SIGN_IN: {
-          on: {
-            authenticated: {
-              target: "#APP.AUTHENTICATED",
-            },
-          },
-        },
-        SIGN_UP: {
-          on: {
-            authenticated: {
-              target: "#APP.AUTHENTICATED",
-            },
-          },
-        },
-        FORGOT_PASSWORD: {},
+        SIGN_IN: {},
+        CONFIRMING_AUTH: {},
       },
     },
     AUTHENTICATED: {

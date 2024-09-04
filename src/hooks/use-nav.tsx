@@ -1,17 +1,15 @@
 import {
   GoToChatTabEvent,
   GoToCreateMessageGroupEvent,
-  GoToForgotPasswordPageEvent,
   GoToOtherTabEvent,
   GoToSignInPageEvent,
-  GoToSignUpPageEvent,
+  ConfirmingAuthEvent,
 } from "@/state/app/events";
 import { useAppActor } from "./use-app-actor-logic";
 
 export type TrackNavEvent =
   | GoToSignInPageEvent
-  | GoToSignUpPageEvent
-  | GoToForgotPasswordPageEvent
+  | ConfirmingAuthEvent
   | GoToChatTabEvent
   | GoToOtherTabEvent
   | GoToCreateMessageGroupEvent;
