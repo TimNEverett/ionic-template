@@ -1,12 +1,15 @@
 import { useMessageGroups } from "@/hooks/use-message-groups";
-import { useEffect } from "react";
+import { ChatMessage } from "@/components/home/chat/ChatMessage";
+import { useUser } from "@/hooks/use-user";
 
 export const ChatMessageList = () => {
   const { selectedGroupMessages } = useMessageGroups();
+  const user = useUser();
+  console.log({ user });
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col space-y-2">
       {selectedGroupMessages.map((message) => (
-        <div key={message.id}>{message.content}</div>
+        <ChatMessage key={message.id} message={message} currentUser={user} />
       ))}
     </div>
   );
