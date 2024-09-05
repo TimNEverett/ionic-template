@@ -204,7 +204,6 @@ export const dataLogic = setup({
             id: "sendMessage",
             src: "sendMessage",
             input: ({ event, context }) => {
-              console.log(event);
               return {
                 content: event.type === "send_message" ? event.content : "",
                 group_id: context.selectedGroupId!,

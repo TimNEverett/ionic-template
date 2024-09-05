@@ -30,7 +30,6 @@ export const AuthForm: FC = () => {
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const redirect_url = `${getSiteURL()}auth/confirm`;
-    console.log({ redirect_url });
     const { data, error } = await supabase.auth.signInWithOtp({
       email: values.email,
       options: {
@@ -38,7 +37,6 @@ export const AuthForm: FC = () => {
         shouldCreateUser: true,
       },
     });
-    console.log({ data, error });
     if (error) toast.error(error.message);
   }
   return (
