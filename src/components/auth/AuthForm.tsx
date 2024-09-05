@@ -15,32 +15,29 @@ import { Input } from "@/components/ui/input";
 import { FC } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { getSiteURL } from "@/lib/utils";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
 });
 
-export const AuthForm: FC<{ type: "signIn" | "signUp" }> = ({ type }) => {
+export const AuthForm: FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    if (type === "signIn") {
-      const { error } = await supabase.auth.signInWithPassword(values);
-      if (error) toast.error(error.message);
-    } else if (type === "signUp") {
-      await supabase.auth.signUp(values);
-      const { error } = await supabase.auth.signInWithPassword(values);
-      if (error)
-        form.setError("email", { type: "manual", message: error.message });
-    }
+    const redirect_url = `${getSiteURL()}auth/confirm`;
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email: values.email,
+      options: {
+        emailRedirectTo: redirect_url,
+        shouldCreateUser: true,
+      },
+    });
+    if (error) toast.error(error.message);
   }
   return (
     <Form {...form}>
@@ -66,28 +63,7 @@ export const AuthForm: FC<{ type: "signIn" | "signUp" }> = ({ type }) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>password</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="*****"
-                  {...field}
-                  type="password"
-                  autoComplete="current-password"
-                />
-              </FormControl>
-              <FormDescription>min 6 chars</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">
-          {type === "signIn" ? "Sign In" : "Sign Up"}
-        </Button>
+        <Button type="submit">sign in</Button>
         <FormMessage />
       </form>
     </Form>

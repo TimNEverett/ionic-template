@@ -7,11 +7,8 @@ export type SetRouterEvent = {
 export type GoToSignInPageEvent = {
   type: "go_to_sign_in_page";
 };
-export type GoToSignUpPageEvent = {
-  type: "go_to_sign_up_page";
-};
-export type GoToForgotPasswordPageEvent = {
-  type: "go_to_forgot_password_page";
+export type ConfirmingAuthEvent = {
+  type: "confirming_auth";
 };
 export type GoToChatTabEvent = {
   type: "go_to_chat_tab";
