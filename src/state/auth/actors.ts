@@ -10,6 +10,7 @@ export const authListener = fromCallback<
   const {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
+    console.log({ event, session });
     switch (event) {
       case "INITIAL_SESSION":
         if (session) {
