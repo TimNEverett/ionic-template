@@ -6,6 +6,7 @@ import { AuthPage } from "@/pages/AuthPage";
 import { LoadingView } from "./LoadingView";
 import { CreateGroupPage } from "./CreateGroupPage";
 import { useAppActor } from "@/hooks/use-app-actor-logic";
+import { GroupMenu } from "@/components/home/group-menu";
 
 export const Routes = () => {
   const { state } = useAppActor();
@@ -27,6 +28,15 @@ export const Routes = () => {
           if (isLoading) return <LoadingView />;
           if (!isAuthenticated) return <Redirect to="/auth" />;
           return <CreateGroupPage />;
+        }}
+      />
+      <Route
+        exact
+        path="/group-menu"
+        render={() => {
+          if (isLoading) return <LoadingView />;
+          if (!isAuthenticated) return <Redirect to="/auth" />;
+          return <GroupMenu />;
         }}
       />
 
