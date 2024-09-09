@@ -27,3 +27,9 @@ export type SendMessageEvent = {
   type: "send_message";
   content: string;
 };
+
+export type UpdateMemberNicknameEvent = {
+  type: "update_member_nickname";
+  groupMemberId: string;
+  nickname: string;
+};

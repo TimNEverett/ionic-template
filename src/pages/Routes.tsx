@@ -6,7 +6,7 @@ import { AuthPage } from "@/pages/AuthPage";
 import { LoadingView } from "./LoadingView";
 import { CreateGroupPage } from "./CreateGroupPage";
 import { useAppActor } from "@/hooks/use-app-actor-logic";
-import { GroupMenu } from "@/components/home/group-menu";
+import { GroupMenu } from "@/components/group-menu";
 
 export const Routes = () => {
   const { state } = useAppActor();
@@ -31,7 +31,6 @@ export const Routes = () => {
         }}
       />
       <Route
-        exact
         path="/group-menu"
         render={() => {
           if (isLoading) return <LoadingView />;

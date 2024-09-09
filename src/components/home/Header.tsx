@@ -1,7 +1,7 @@
 import { IonHeader, IonToolbar, useIonRouter } from "@ionic/react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase/client";
-import { GroupMenu } from "./group-menu/index";
+import { GroupMenu } from "../group-menu/index";
 import { useMessageGroups } from "@/hooks/use-message-groups";
 
 export const Header = () => {

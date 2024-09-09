@@ -19,12 +19,13 @@ export const loadMessageGroup = fromPromise<
     messageGroup: Tables<"message_group">;
     groupMembers: Tables<"group_member">[];
     messages: Tables<"message">[];
+    invites: Tables<"group_invite">[];
   },
   { messageGroupId: string }
 >(async ({ input: { messageGroupId } }) => {
   const { data, error } = await supabase
     .from("message_group")
-    .select("*, message(*), group_member(*)")
+    .select("*, message(*), group_member(*), group_invite(*)")
     .eq("id", messageGroupId)
     .single();
   if (error) throw error;
@@ -37,6 +38,7 @@ export const loadMessageGroup = fromPromise<
     },
     groupMembers: data.group_member,
     messages: data.message,
+    invites: data.group_invite,
   };
 });
 
@@ -95,5 +97,63 @@ export const sendMessage = fromPromise<
     content,
     group_id,
   });
+  if (error) throw error;
+});
+
+export const updateMemberNickname = fromPromise<
+  Tables<"group_member">,
+  { groupMemberId: string; nickname: string }
+>(async ({ input: { groupMemberId, nickname } }) => {
+  const { data, error } = await supabase
+    .from("group_member")
+    .update({ nickname })
+    .match({ id: groupMemberId })
+    .select("*")
+    .single();
+  if (error) throw error;
+  return data;
+});
+
+export const cancelInvite = fromPromise<void, { inviteId: string }>(
+  async ({ input: { inviteId } }) => {
+    const { data, error } = await supabase
+      .from("group_invite")
+      .delete()
+      .match({ id: inviteId })
+      .select("*")
+      .single();
+    if (error) throw error;
+  }
+);
+
+export const resendInvite = fromPromise<void, { inviteId: string }>(
+  async ({ input: { inviteId } }) => {
+    const { data, error } = await supabase
+      .from("group_invite")
+      .update({
+        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      })
+      .match({ id: inviteId })
+      .select("*")
+      .single();
+    if (error) throw error;
+  }
+);
+
+export const sendInvite = fromPromise<
+  void,
+  { email: string; expirationDays: number; groupId: string }
+>(async ({ input: { email, expirationDays, groupId } }) => {
+  const { data, error } = await supabase
+    .from("group_invite")
+    .insert({
+      email,
+      expires_at: new Date(
+        Date.now() + expirationDays * 24 * 60 * 60 * 1000
+      ).toISOString(),
+      group_id: groupId,
+    })
+    .select("*")
+    .single();
   if (error) throw error;
 });

@@ -6,10 +6,26 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const dateToDateString = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const month = monthNames[date.getMonth()];
   const day = date.getDate();
-  return `${year}-${month}-${day}`;
+  const year = date.getFullYear();
+
+  return `${month} ${day} ${year}`;
 };
 
 export const getSiteURL = () => {

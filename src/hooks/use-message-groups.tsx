@@ -26,5 +26,10 @@ export const useMessageGroups = () => {
         type: "send_message",
         content,
       }),
+    selectMessageGroup: (messageGroupId: string) =>
+      actor.send({
+        type: "message_group_selected",
+        messageGroupId,
+      }),
   };
 };
