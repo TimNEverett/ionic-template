@@ -141,7 +141,7 @@ export const resendInvite = fromPromise<void, { inviteId: string }>(
 );
 
 export const sendInvite = fromPromise<
-  void,
+  Tables<"group_invite">,
   { email: string; expirationDays: number; groupId: string }
 >(async ({ input: { email, expirationDays, groupId } }) => {
   const { data, error } = await supabase
@@ -156,4 +156,5 @@ export const sendInvite = fromPromise<
     .select("*")
     .single();
   if (error) throw error;
+  return data;
 });

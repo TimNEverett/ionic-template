@@ -33,3 +33,9 @@ export type UpdateMemberNicknameEvent = {
   groupMemberId: string;
   nickname: string;
 };
+
+export type SendInviteEvent = {
+  type: "send_invite";
+  email: string;
+  expirationDays: number;
+};

@@ -6,6 +6,7 @@ import {
   MessageGroupCreatedEvent,
   MessageGroupSelectedEvent,
   NewMessageEvent,
+  SendInviteEvent,
   SendMessageEvent,
   UpdateMemberNicknameEvent,
 } from "./events";
@@ -16,6 +17,7 @@ import {
   messageGroupListener,
   sendMessage,
   updateMemberNickname,
+  sendInvite,
 } from "./actors";
 
 type DataContext = {
@@ -40,7 +42,8 @@ export const dataLogic = setup({
       | MessageGroupSelectedEvent
       | SendMessageEvent
       | NewMessageEvent
-      | UpdateMemberNicknameEvent,
+      | UpdateMemberNicknameEvent
+      | SendInviteEvent,
     emitted: {} as
       | GoToCreateMessageGroupEvent
       | MessageGroupSelectedEvent
@@ -53,6 +56,7 @@ export const dataLogic = setup({
     sendMessage,
     messageGroupListener,
     updateMemberNickname,
+    sendInvite,
   },
   guards: {
     hasSelectedGroup: ({ context }) =>
@@ -214,6 +218,9 @@ export const dataLogic = setup({
             update_member_nickname: {
               target: "UPDATE_MEMBER_NICKNAME",
             },
+            send_invite: {
+              target: "SENDING_INVITE",
+            },
           },
         },
         SENDING_MESSAGE: {
@@ -228,6 +235,37 @@ export const dataLogic = setup({
             },
             onDone: {
               target: "READY",
+            },
+          },
+        },
+        SENDING_INVITE: {
+          invoke: {
+            id: "sendInvite",
+            src: "sendInvite",
+            input: ({ event, context }) => {
+              return {
+                email: event.type === "send_invite" ? event.email : "",
+                expirationDays:
+                  event.type === "send_invite" ? event.expirationDays : 0,
+                groupId: context.selectedGroupId!,
+              };
+            },
+            onDone: {
+              target: "READY",
+              actions: assign(({ context, event }) => {
+                const { groupInvites } = context;
+                const newGroupInvite = event.output;
+                const group = groupInvites[newGroupInvite.group_id];
+                return {
+                  groupInvites: {
+                    ...groupInvites,
+                    [newGroupInvite.group_id]: {
+                      ...group,
+                      [newGroupInvite.id]: newGroupInvite,
+                    },
+                  },
+                };
+              }),
             },
           },
         },

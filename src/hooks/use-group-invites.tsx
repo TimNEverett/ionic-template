@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router";
 import { useDataActor } from "./use-data-actor-logic";
 
 export const useGroupInvites = () => {
@@ -9,7 +7,13 @@ export const useGroupInvites = () => {
       ? context.groupInvites[context.selectedGroupId]
       : {};
 
-  const sendInvite = async (email: string, expirationDays: number) => {};
+  const sendInvite = async (email: string, expirationDays: number) => {
+    actor.send({
+      type: "send_invite",
+      email,
+      expirationDays,
+    });
+  };
 
   const resendInvite = async (inviteId: string) => {};
 
