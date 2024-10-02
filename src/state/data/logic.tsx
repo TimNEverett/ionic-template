@@ -6,7 +6,9 @@ import {
   MessageGroupCreatedEvent,
   MessageGroupSelectedEvent,
   NewMessageEvent,
+  SendInviteEvent,
   SendMessageEvent,
+  UpdateMemberNicknameEvent,
 } from "./events";
 import {
   loadMessageGroups,
@@ -14,6 +16,8 @@ import {
   createMessageGroup,
   messageGroupListener,
   sendMessage,
+  updateMemberNickname,
+  sendInvite,
 } from "./actors";
 
 type DataContext = {
@@ -25,6 +29,9 @@ type DataContext = {
   messages: {
     [groupId: string]: { [messageId: string]: Tables<"message"> };
   };
+  groupInvites: {
+    [groupId: string]: { [inviteId: string]: Tables<"group_invite"> };
+  };
 };
 
 export const dataLogic = setup({
@@ -34,7 +41,9 @@ export const dataLogic = setup({
       | CreateMessageGroupEvent
       | MessageGroupSelectedEvent
       | SendMessageEvent
-      | NewMessageEvent,
+      | NewMessageEvent
+      | UpdateMemberNicknameEvent
+      | SendInviteEvent,
     emitted: {} as
       | GoToCreateMessageGroupEvent
       | MessageGroupSelectedEvent
@@ -46,6 +55,8 @@ export const dataLogic = setup({
     createMessageGroup,
     sendMessage,
     messageGroupListener,
+    updateMemberNickname,
+    sendInvite,
   },
   guards: {
     hasSelectedGroup: ({ context }) =>
@@ -58,6 +69,7 @@ export const dataLogic = setup({
     selectedGroupId: null,
     messages: {},
     groupMembers: {},
+    groupInvites: {},
   },
   id: "DATA",
   initial: "INITIAL",
@@ -142,7 +154,8 @@ export const dataLogic = setup({
         onDone: {
           target: "GROUP_SELECTED",
           actions: assign(({ context, event }) => {
-            const { messageGroup, groupMembers, messages } = event.output;
+            const { messageGroup, groupMembers, messages, invites } =
+              event.output;
             return {
               messageGroups: {
                 ...context.messageGroups,
@@ -150,7 +163,7 @@ export const dataLogic = setup({
               },
               groupMembers: groupMembers.reduce((acc, groupMember) => {
                 acc[groupMember.group_id] = {
-                  [groupMember.user_id]: groupMember,
+                  [groupMember.id]: groupMember,
                 };
                 return acc;
               }, context.groupMembers),
@@ -159,6 +172,11 @@ export const dataLogic = setup({
                 acc[messageGroup.id][message.id] = message;
                 return acc;
               }, context.messages),
+              groupInvites: invites.reduce((acc, groupInvite) => {
+                if (!acc[messageGroup.id]) acc[messageGroup.id] = {};
+                acc[messageGroup.id][groupInvite.id] = groupInvite;
+                return acc;
+              }, context.groupInvites),
             };
           }),
         },
@@ -197,6 +215,12 @@ export const dataLogic = setup({
             send_message: {
               target: "SENDING_MESSAGE",
             },
+            update_member_nickname: {
+              target: "UPDATE_MEMBER_NICKNAME",
+            },
+            send_invite: {
+              target: "SENDING_INVITE",
+            },
           },
         },
         SENDING_MESSAGE: {
@@ -211,6 +235,71 @@ export const dataLogic = setup({
             },
             onDone: {
               target: "READY",
+            },
+          },
+        },
+        SENDING_INVITE: {
+          invoke: {
+            id: "sendInvite",
+            src: "sendInvite",
+            input: ({ event, context }) => {
+              return {
+                email: event.type === "send_invite" ? event.email : "",
+                expirationDays:
+                  event.type === "send_invite" ? event.expirationDays : 0,
+                groupId: context.selectedGroupId!,
+              };
+            },
+            onDone: {
+              target: "READY",
+              actions: assign(({ context, event }) => {
+                const { groupInvites } = context;
+                const newGroupInvite = event.output;
+                const group = groupInvites[newGroupInvite.group_id];
+                return {
+                  groupInvites: {
+                    ...groupInvites,
+                    [newGroupInvite.group_id]: {
+                      ...group,
+                      [newGroupInvite.id]: newGroupInvite,
+                    },
+                  },
+                };
+              }),
+            },
+          },
+        },
+        UPDATE_MEMBER_NICKNAME: {
+          invoke: {
+            id: "updateMemberNickname",
+            src: "updateMemberNickname",
+            input: ({ event, context }) => {
+              if (event.type !== "update_member_nickname")
+                return {
+                  groupMemberId: "",
+                  nickname: "",
+                };
+              return {
+                groupMemberId: event.groupMemberId,
+                nickname: event.nickname,
+              };
+            },
+            onDone: {
+              target: "READY",
+              actions: assign(({ context, event }) => {
+                const { groupMembers } = context;
+                const newGroupMember = event.output;
+                const group = groupMembers[newGroupMember.group_id];
+                return {
+                  groupMembers: {
+                    ...groupMembers,
+                    [newGroupMember.group_id]: {
+                      ...group,
+                      [newGroupMember.id]: newGroupMember,
+                    },
+                  },
+                };
+              }),
             },
           },
         },

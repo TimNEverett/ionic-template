@@ -34,6 +34,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      group_invite: {
+        Row: {
+          created_at: string
+          created_by: string
+          email: string | null
+          expires_at: string | null
+          group_id: string
+          id: string
+          invite_code: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          email?: string | null
+          expires_at?: string | null
+          group_id: string
+          id?: string
+          invite_code?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          email?: string | null
+          expires_at?: string | null
+          group_id?: string
+          id?: string
+          invite_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_invite_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_invite_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "message_group"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_member: {
         Row: {
           group_id: string
@@ -146,6 +191,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_invite: {
+        Args: {
+          _auth_code: string
+        }
+        Returns: undefined
+      }
+      generate_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       is_group_creator: {
         Args: {
           _group_id: string

@@ -6,7 +6,6 @@ export const ChatMessage: React.FC<{
   message: Tables<"message">;
   currentUser: User | null;
 }> = ({ message, currentUser }) => {
-  console.log({ message, currentUser });
   const isCurrentUser = message.sender_id === currentUser?.id;
   return (
     <div

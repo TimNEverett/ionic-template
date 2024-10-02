@@ -5,7 +5,6 @@ import { useUser } from "@/hooks/use-user";
 export const ChatMessageList = () => {
   const { selectedGroupMessages } = useMessageGroups();
   const user = useUser();
-  console.log({ user });
   return (
     <div className="flex flex-col space-y-2">
       {selectedGroupMessages.map((message) => (
