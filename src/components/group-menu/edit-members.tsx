@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IonPage, useIonRouter } from "@ionic/react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Edit } from "lucide-react";
+import { ChevronLeft, Edit, User } from "lucide-react";
 import { useGroupMembers } from "@/hooks/use-group-members";
 import {
   Sheet,
@@ -44,17 +44,38 @@ export const EditMembers: React.FC = () => {
         </div>
 
         {/* Member List */}
-        <div className="flex-1 p-4">
-          {selectedGroupMembers.map((member) => (
-            <button
-              key={member.id}
-              className="w-full text-left mb-2 p-2 border rounded flex justify-between items-center hover:bg-gray-100 transition-colors"
-              onClick={() => handleEditNickname(member)}
-            >
-              <span>{member.nickname || member.id}</span>
-              <Edit className="h-5 w-5" />
-            </button>
-          ))}
+        <div className="flex-1 p-4 space-y-4">
+          <h2 className="text-lg font-semibold mb-2">Group Members</h2>
+          {selectedGroupMembers.length === 0 ? (
+            <p className="text-gray-500 text-center py-4">
+              No members in this group
+            </p>
+          ) : (
+            selectedGroupMembers.map((member) => (
+              <div
+                key={member.id}
+                className="bg-secondary rounded-lg shadow-md p-4 flex justify-between items-center transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className=" rounded-full p-2">
+                    <User className="h-5 w-5 " />
+                  </div>
+                  <span className="font-medium ">
+                    {member.nickname || member.id}
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleEditNickname(member)}
+                  className="flex items-center "
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <Sheet
