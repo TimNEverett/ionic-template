@@ -39,3 +39,7 @@ export type SendInviteEvent = {
   email: string;
   expirationDays: number;
 };
+
+export type InvokeTestFnEvent = {
+  type: "invoke_test_fn";
+};

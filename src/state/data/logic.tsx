@@ -1,8 +1,9 @@
 import { Tables } from "@/lib/supabase/database.types";
-import { assign, enqueueActions, sendParent, sendTo, setup } from "xstate";
+import { assign, enqueueActions, log, sendParent, sendTo, setup } from "xstate";
 import { GoToCreateMessageGroupEvent } from "../app/events";
 import {
   CreateMessageGroupEvent,
+  InvokeTestFnEvent,
   MessageGroupCreatedEvent,
   MessageGroupSelectedEvent,
   NewMessageEvent,
@@ -18,6 +19,7 @@ import {
   sendMessage,
   updateMemberNickname,
   sendInvite,
+  invokeTestFn,
 } from "./actors";
 
 type DataContext = {
@@ -43,7 +45,8 @@ export const dataLogic = setup({
       | SendMessageEvent
       | NewMessageEvent
       | UpdateMemberNicknameEvent
-      | SendInviteEvent,
+      | SendInviteEvent
+      | InvokeTestFnEvent,
     emitted: {} as
       | GoToCreateMessageGroupEvent
       | MessageGroupSelectedEvent
@@ -57,6 +60,7 @@ export const dataLogic = setup({
     messageGroupListener,
     updateMemberNickname,
     sendInvite,
+    invokeTestFn,
   },
   guards: {
     hasSelectedGroup: ({ context }) =>
@@ -220,6 +224,19 @@ export const dataLogic = setup({
             },
             send_invite: {
               target: "SENDING_INVITE",
+            },
+            invoke_test_fn: {
+              target: "TEST_FN",
+            },
+          },
+        },
+        TEST_FN: {
+          invoke: {
+            id: "invokeTestFn",
+            src: "invokeTestFn",
+            onDone: {
+              target: "READY",
+              actions: ({ event }) => console.log(event.output),
             },
           },
         },
