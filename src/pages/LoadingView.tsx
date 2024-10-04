@@ -1,9 +1,9 @@
-import { IonContent } from "@ionic/react";
+import { Loader2 } from "lucide-react";
 
-export const LoadingView = () => {
+export const LoadingView: React.FC = () => {
   return (
-    <>
-      <IonContent>Loading</IonContent>
-    </>
+    <div className="flex items-center justify-center h-screen bg-background">
+      <Loader2 className="w-16 h-16 animate-spin text-primary" />
+    </div>
   );
 };

@@ -83,9 +83,6 @@ export const appLogic = setup({
         confirming_auth: {
           target: ".CONFIRMING_AUTH",
         },
-        authenticated: {
-          target: "#APP.AUTHENTICATED",
-        },
       },
       states: {
         SIGN_IN: {},

@@ -1,6 +1,5 @@
 import { useAppActor } from "@/hooks/use-app-actor-logic";
 import { useNav } from "@/hooks/use-nav";
-import { supabase } from "@/lib/supabase/client";
 import { useIonRouter } from "@ionic/react";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
@@ -23,16 +22,6 @@ export const RouterListener = () => {
           break;
         case "/auth/confirm":
           trackNav({ type: "confirming_auth" });
-          const token = router.routeInfo.params?.token_hash;
-          if (!token || typeof token != "string")
-            appActor.send({ type: "unauthenticated" });
-          else {
-            const { error } = await supabase.auth.verifyOtp({
-              token_hash: token,
-              type: "magiclink",
-            });
-            if (error) appActor.send({ type: "unauthenticated" });
-          }
           break;
         case "/":
         case "/home":
