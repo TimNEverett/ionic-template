@@ -121,6 +121,7 @@ export type Database = {
       message: {
         Row: {
           content: string
+          embedding: string | null
           group_id: string
           id: string
           sender_id: string
@@ -128,6 +129,7 @@ export type Database = {
         }
         Insert: {
           content: string
+          embedding?: string | null
           group_id: string
           id?: string
           sender_id?: string
@@ -135,6 +137,7 @@ export type Database = {
         }
         Update: {
           content?: string
+          embedding?: string | null
           group_id?: string
           id?: string
           sender_id?: string
