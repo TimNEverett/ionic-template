@@ -158,3 +158,10 @@ export const sendInvite = fromPromise<
   if (error) throw error;
   return data;
 });
+
+export const invokeTestFn = fromPromise<{ message: string }>(async () => {
+  const { data, error } = await supabase.functions.invoke("test-fn");
+  console.log({ data, error });
+  if (error) throw error;
+  return data;
+});

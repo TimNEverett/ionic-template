@@ -20,6 +20,14 @@ create table "public"."message" (
 
 alter table "public"."message" enable row level security;
 
+begin;
+  -- remove the realtime publication
+  drop publication if exists supabase_realtime;
+
+  -- re-create the publication but don't enable it for any tables
+  create publication supabase_realtime for table "public"."message";
+commit;
+
 create table "public"."message_group" (
     "id" uuid not null default uuid_generate_v4(),
     "name" text not null,
