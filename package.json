@@ -3,13 +3,16 @@
   "version": "0.0.1",
   "type": "module",
   "license": "MIT",
+  "packageManager": "pnpm@9.12.1",
   "scripts": {
     "dev": "ionic serve",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint",
     "db:gen-types": "supabase gen types typescript --local | tee src/lib/supabase/database.types.ts > supabase/functions/_shared/database.types.ts",
-    "db:migration": "supabase db diff --local --schema=auth,public,storage,vault,edge_functions -f"
+    "db:migration": "supabase db diff --local --schema=auth,public,storage,vault,edge_functions -f",
+    "db:reset": "supabase db reset && pnpm db:seed-api-config",
+    "db:seed-api-config": "node scripts/seedLocalApiConfig.js"
   },
   "dependencies": {
     "@capacitor/app": "6.0.1",
@@ -47,6 +50,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "6.1.2",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-legacy": "^5.0.0",
@@ -55,6 +59,7 @@
     "eslint": "^8.35.0",
     "eslint-plugin-react": "^7.32.2",
     "jsdom": "^22.1.0",
+    "pg": "^8.13.0",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
     "terser": "^5.4.0",
