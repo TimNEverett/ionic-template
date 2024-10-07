@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint",
     "db:gen-types": "supabase gen types typescript --local | tee src/lib/supabase/database.types.ts > supabase/functions/_shared/database.types.ts",
-    "db:migration": "supabase db diff --local --schema=auth,public,storage -f"
+    "db:migration": "supabase db diff --local --schema=auth,public,storage,vault,edge_functions -f"
   },
   "dependencies": {
     "@capacitor/app": "6.0.1",
