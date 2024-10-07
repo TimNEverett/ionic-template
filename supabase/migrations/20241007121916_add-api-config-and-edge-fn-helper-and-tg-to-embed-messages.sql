@@ -1,10 +1,3 @@
-create table "public"."config" (
-    "anon" text,
-    "supabase_url" text,
-    "service_role" text
-);
-
-
 set check_function_bodies = off;
 
 CREATE OR REPLACE FUNCTION public.message_embed_tg_fn()
@@ -33,47 +26,6 @@ END;
 $function$
 ;
 
-grant delete on table "public"."config" to "anon";
-
-grant insert on table "public"."config" to "anon";
-
-grant references on table "public"."config" to "anon";
-
-grant select on table "public"."config" to "anon";
-
-grant trigger on table "public"."config" to "anon";
-
-grant truncate on table "public"."config" to "anon";
-
-grant update on table "public"."config" to "anon";
-
-grant delete on table "public"."config" to "authenticated";
-
-grant insert on table "public"."config" to "authenticated";
-
-grant references on table "public"."config" to "authenticated";
-
-grant select on table "public"."config" to "authenticated";
-
-grant trigger on table "public"."config" to "authenticated";
-
-grant truncate on table "public"."config" to "authenticated";
-
-grant update on table "public"."config" to "authenticated";
-
-grant delete on table "public"."config" to "service_role";
-
-grant insert on table "public"."config" to "service_role";
-
-grant references on table "public"."config" to "service_role";
-
-grant select on table "public"."config" to "service_role";
-
-grant trigger on table "public"."config" to "service_role";
-
-grant truncate on table "public"."config" to "service_role";
-
-grant update on table "public"."config" to "service_role";
 
 CREATE TRIGGER message_embed_tg AFTER INSERT OR UPDATE ON public.message FOR EACH ROW EXECUTE FUNCTION message_embed_tg_fn();
 
