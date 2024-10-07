@@ -16,15 +16,15 @@ BEGIN
     missing_configs := ARRAY[]::TEXT[];
     
     IF anon IS NULL THEN
-        missing_configs := missing_configs || 'anon';
+        missing_configs := array_append(missing_configs, 'anon');
     END IF;
     
     IF supabase_url IS NULL THEN
-        missing_configs := missing_configs || 'supabase_url';
+        missing_configs := array_append(missing_configs, 'supabase_url');
     END IF;
     
     IF service_role IS NULL THEN
-        missing_configs := missing_configs || 'service_role';
+        missing_configs := array_append(missing_configs, 'service_role');
     END IF;
 
     IF array_length(missing_configs, 1) > 0 THEN
